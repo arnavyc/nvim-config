@@ -340,3 +340,6 @@ zsdoc/data
 !/tests/_output/.gitkeep
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,archive,archives,python,zsh,lua
+
+# Custom
+plugin/
