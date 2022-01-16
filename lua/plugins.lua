@@ -1,32 +1,48 @@
-return require('packer').startup(function()
+return require'packer'.startup(function()
   -- Packer can manage itself as an optional plugin
   use 'wbthomason/packer.nvim'
 
   -- UI to select things (files, grep results, open buffers...)
   --use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
+  -- Treesitter
+  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
+
   -- LSP and completion
   use 'neovim/nvim-lspconfig'
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
-  -- use 'nvim-lua/completion-nvim'
 
   use 'saadparwaiz1/cmp_luasnip' -- Snippets source for nvim-cmp
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
 
   -- Color scheme
   if tonumber(vim.api.nvim_get_option('t_Co')) > 16 then
-    use {'kaicataldo/material.vim', branch = 'main'}
+    use 'marko-cerovac/material.nvim'
   end
 
   -- Sensible defaults
   use 'tpope/vim-sensible'
 
-  -- Lightline
-  use 'itchyny/lightline.vim'
+  local has_icons = true
+  if (vim.env.TERM ~= nil and string.match(vim.env.TERM, '^linux') ~= nil) then
+    local has_icons = false
+  end
 
-  -- coc.nvim
-  --if vim.fn.executable('node') then use 'neoclide/coc.nvim' end
+  -- Buffer line
+  if has_icons then
+    use {
+      'akinsho/bufferline.nvim',
+      requires = 'kyazdani42/nvim-web-devicons',
+      config = function() require'bufferline'.setup{} end
+    }
+  end
+
+  -- Status line
+  use {
+    'feline-nvim/feline.nvim',
+    config = function() require'feline'.setup{} end
+  }
 
   -- Vim dispatch
   use 'tpope/vim-dispatch'
