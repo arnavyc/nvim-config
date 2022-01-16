@@ -1,27 +1,31 @@
 -- LSP settings
+local vimp = require 'vimp'
 local nvim_lsp = require 'lspconfig'
+
 local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  local opts = { noremap = true, silent = true }
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'v', '<leader>ca', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
+  vimp.add_buffer_maps(bufnr, function ()
+    vimp.nnoremap({'silent'}, 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
+    vimp.nnoremap({'silent'}, 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+    vimp.nnoremap({'silent'}, 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
+    vimp.nnoremap({'silent'}, 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+    vimp.nnoremap({'silent'}, '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>wl', function ()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end)
+    vimp.nnoremap({'silent'}, '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+    vimp.nnoremap({'silent'}, 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>')
+    vimp.nnoremap({'silent'}, '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
+    vimp.nnoremap({'silent'}, ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>')
+    vimp.nnoremap({'silent'}, '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
+  end)
   vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
 

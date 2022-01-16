@@ -53,5 +53,7 @@ return require'packer'.startup(function()
   -- EditorConfig for Vim
   use 'editorconfig/editorconfig-vim'
 
+  -- To define keymappings
+  use 'svermeulen/vimpeccable'
 end)
 
