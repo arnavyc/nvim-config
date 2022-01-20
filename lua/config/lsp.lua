@@ -98,7 +98,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
-vim.o.updatetime = 250
-vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float()]]
-vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
+--vim.o.updatetime = 250
+--vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float()]]
+--vim.cmd [[autocmd CursorHoldI * silent! lua vim.lsp.buf.signature_help()]]
 

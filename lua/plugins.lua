@@ -1,4 +1,18 @@
-return require'packer'.startup(function()
+function str_to_bool(str)
+  true_str={["true"] = true, ["1"] = true}
+  return true_str[str] ~= nil
+end
+
+function has_icons()
+  if vim.env.ENABLE_NERD_ICONS ~= nil then
+    return str_to_bool(vim.env.ENABLE_NERD_ICONS)
+  end
+
+  return vim.fn.has('gui_running') == 1
+         or (vim.env.TERM ~= nil and vim.env.TERM:match('^linux') == nil)
+end
+
+return require'packer'.startup(function(use)
   -- Packer can manage itself as an optional plugin
   use 'wbthomason/packer.nvim'
 
@@ -24,24 +38,49 @@ return require'packer'.startup(function()
   -- Sensible defaults
   use 'tpope/vim-sensible'
 
-  local has_icons = true
-  if (vim.env.TERM ~= nil and string.match(vim.env.TERM, '^linux') ~= nil) then
-    local has_icons = false
-  end
-
   -- Buffer line
-  if has_icons then
-    use {
-      'akinsho/bufferline.nvim',
-      requires = 'kyazdani42/nvim-web-devicons',
-      config = function() require'bufferline'.setup{} end
-    }
-  end
+  use {
+    'akinsho/bufferline.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    cond = has_icons,
+    config = function() require'bufferline'.setup{} end
+  }
 
+  use {
+    'folke/trouble.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    config = function()
+      local trouble_config = {}
+      if not has_icons() then
+        trouble_config = {
+          icons = false,
+          fold_open = "v", -- icon used for open folds
+          fold_closed = ">", -- icon used for closed folds
+          indent_lines = false, -- add an indent guide below the fold icons
+          signs = {
+            -- icons / text used for a diagnostic
+            error = "error",
+            warning = "warn",
+            hint = "hint",
+            information = "info"
+          },
+          use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+          }
+      end
+      require'trouble'.setup(trouble_setup)
+    end
+  }
   -- Status line
   use {
     'feline-nvim/feline.nvim',
-    config = function() require'feline'.setup{} end
+    config = function()
+      local feline_config = {}
+      if not has_icons() then
+        feline_config['preset'] = 'noicon'
+      end
+
+      require'feline'.setup(feline_config)
+    end
   }
 
   -- Vim dispatch
